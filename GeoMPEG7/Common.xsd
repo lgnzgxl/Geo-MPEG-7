@@ -1,0 +1,440 @@
+<?xml version="1.0"?>
+<xs:schema targetNamespace="http://www.geompeg7.com"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:geompeg7="http://www.geompeg7.com"
+           xmlns="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+  <!--GeoMpeg7Base类型-->
+  <xs:complexType name="FeaturesLayerBaseType" abstract="true"/>
+  <!--floatUnit类型-->
+  <xs:complexType name="FloatUnitType">
+    <xs:simpleContent>
+      <xs:extension base="xs:float">
+        <xs:attribute name="Unit"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <!--IntUnit类型-->
+  <xs:complexType name="IntPostiveUnitType">
+    <xs:simpleContent>
+      <xs:extension base="xs:positiveInteger">
+        <xs:attribute name="Unit"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <!--坐标类型-->
+  <xs:simpleType name="CoordinateType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="-?[0-9.]+,-?[0-9.]+(,-?[0-9.]+)?"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <!--空间坐标类型-->
+  <xs:complexType name="SpatialCoordinateType">
+    <xs:sequence>
+      <xs:element name="CoordinateValue" type="geompeg7:CoordinateType"/>
+    </xs:sequence>
+    <xs:attribute name="ReferenceSystem" type="xs:string" use="required"/>
+  </xs:complexType>
+  <!--空间球坐标类型-->
+  <xs:complexType name="SpatialBallType">
+    <xs:complexContent>
+      <xs:extension base="geompeg7:SpatialCoordinateType">
+        <xs:sequence>
+          <xs:element name="Radius" type="geompeg7:FloatUnitType"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <!--空间坐标列表类型-->
+  <xs:complexType name="ListSpatialCoordinateType">
+    <xs:sequence>
+      <xs:element name="CoordinateValue" type="geompeg7:CoordinateType"  minOccurs="2" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="ReferenceSystem" type="xs:string" use="required"/>
+  </xs:complexType>
+  <!--空间多面类型-->
+  <xs:complexType name="SurfaceSpatialCoordinateType">
+    <xs:sequence>
+      <xs:element name="Surface" type="geompeg7:ListSpatialCoordinateType"  minOccurs="1" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="ReferenceSystem" type="xs:string" use="required"/>
+  </xs:complexType>
+  <!--时间坐标类型-->
+  <xs:complexType name="TimeCoordinateType">
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name="Time" type="xs:time"/>
+        <xs:element name="Date" type="xs:date"/>
+        <xs:element name="DateTime" type="xs:dateTime"/>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="ReferenceSystem" type="xs:string" use="required"/>
+  </xs:complexType>
+  <!--时间段类型-->
+  <xs:complexType name="SegmentTimeCoordinateType">
+    <xs:sequence>
+      <xs:choice  minOccurs="2" maxOccurs="2">
+        <xs:element name="Time" type="xs:time"/>
+        <xs:element name="Date" type="xs:date"/>
+        <xs:element name="DateTime" type="xs:dateTime"/>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="ReferenceSystem" type="xs:string" use="required"/>
+  </xs:complexType>
+  <!--列表时间类型-->
+  <xs:complexType name="ListTimeCoordinateType">
+    <xs:sequence>
+      <xs:choice  minOccurs="2" maxOccurs="unbounded">
+        <xs:element name="Time" type="xs:time"/>
+        <xs:element name="Date" type="xs:date"/>
+        <xs:element name="DateTime" type="xs:dateTime"/>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="ReferenceSystem" type="xs:string" use="required"/>
+  </xs:complexType>
+  <!--时间/空间范围类型-->
+  <xs:complexType name="ExtentType">
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name ="TimeCoordinate" type="geompeg7:SegmentTimeCoordinateType"/>
+        <xs:element name="SpatialCoordinate" type="geompeg7:ListSpatialCoordinateType"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <!--几何类型-->
+  <xs:complexType name="GeometryType">
+    <xs:sequence>
+      <xs:choice>
+        <xs:element name ="Point" type="geompeg7:SpatialCoordinateType"/>
+        <xs:element name="Line" type="geompeg7:ListSpatialCoordinateType"/>
+        <xs:element name="Polygon" type="geompeg7:ListSpatialCoordinateType"/>
+        <xs:element name="Ball" type="geompeg7:SpatialBallType"/>
+        <xs:element name="Body" type="geompeg7:SurfaceSpatialCoordinateType"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <!--欧拉角类型-->
+  <xs:complexType name="EulerAngleType">
+    <xs:sequence>
+      <xs:element name="heading">
+        <xs:simpleType>
+          <xs:restriction base="xs:double">
+            <xs:minInclusive value="0"/>
+            <xs:maxInclusive value="360"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="pitch">
+        <xs:simpleType>
+          <xs:restriction base="xs:double">
+            <xs:minInclusive value="-90"/>
+            <xs:maxInclusive value="90"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="roll">
+        <xs:simpleType>
+          <xs:restriction base="xs:double">
+            <xs:minInclusive value="-90"/>
+            <xs:maxInclusive value="90"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <!--列表类型-->
+  <xs:simpleType name="ListIntType">
+    <xs:list itemType="xs:positiveInteger"/>
+  </xs:simpleType>
+  <!--0~1间的小数-->
+  <xs:simpleType name="ZeroOne">
+    <xs:restriction base="xs:float">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <!--0~1间的小数列表-->
+  <xs:simpleType name="ListFloatType">
+    <xs:list itemType="geompeg7:ZeroOne"/>
+  </xs:simpleType>
+  <!--湿度-->
+  <xs:simpleType name="HumidityValue">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="100"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="HumidityType">
+    <xs:simpleContent>
+      <xs:extension base="geompeg7:HumidityValue">
+        <xs:attribute name="Unit" type="xs:string" fixed="%" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <!--温度-->
+  <xs:complexType name="TemperatureType">
+    <xs:simpleContent>
+      <xs:extension base="xs:float">
+        <xs:attribute name="Unit" fixed="℃" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <!--固体类型-->
+  <xs:complexType name="ObjectType">
+    <xs:sequence>
+      <!--实体描述-->
+      <xs:element name="GeometricFile" type="xs:anyURI"/>
+      <!--材质-->
+      <xs:element name="Material">
+        <xs:complexType>
+          <xs:sequence>
+            <!--材质不同频率下的吸声系数-->
+            <xs:element name="AbsorptionCoefficient" minOccurs="0">
+              <xs:complexType>
+                <xs:sequence>
+                  <!--频率列表-->
+                  <xs:element name="Frequency">
+                    <xs:complexType>
+                      <xs:simpleContent>
+                        <xs:extension base="geompeg7:ListIntType">
+                          <xs:attribute name="Unit" type="xs:string" fixed="Hz" use="required"/>
+                        </xs:extension>
+                      </xs:simpleContent>
+                    </xs:complexType>
+                  </xs:element>
+                  <!--吸声系数列表-->
+                  <xs:element name="Coefficient" type="geompeg7:ListFloatType"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+          <!--吸声材料名-->
+          <xs:attribute name="Name" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <!--实体名-->
+    <xs:attribute name="Name" type="xs:string" use="required"/>
+  </xs:complexType>
+  <!--地理语义类型-->
+  <xs:complexType name="GeographicalSemanticsType">
+    <xs:sequence>
+      <!--定义-->
+      <xs:element name="Definition" type="xs:string"/>
+      <!--分类-->
+      <xs:element name="Classification" type="xs:string"/>
+      <!--原理图-->
+      <xs:element name="Diagram" type="xs:anyURI"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!--空间定位类型-->
+  <xs:complexType name="SpatialLocationType">
+    <xs:sequence>
+      <xs:choice maxOccurs="unbounded">
+        <!--描述-->
+        <xs:element name="Description" type="xs:string"/>
+        <!--坐标-->
+        <xs:element name="Coordinate" type="geompeg7:SpatialCoordinateType"/>
+        <!--轨迹-->
+        <xs:element name="Trajectory" type="geompeg7:ListSpatialCoordinateType"/>
+        <!--范围-->
+        <xs:element name="Extent" type="geompeg7:ExtentType"/>
+        <!--文件-->
+        <xs:element name="File" type="xs:anyURI"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <!--几何形态类型-->
+  <xs:complexType name="GeometricalFormsType">
+    <xs:sequence>
+      <xs:choice maxOccurs="unbounded">
+        <!--几何-->
+        <xs:element name="Geometry" type="geompeg7:GeometryType"/>
+        <!--文件-->
+        <xs:element name="File" type="xs:anyURI"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <!--属性特征类型-->
+  <xs:attributeGroup name="AttributeCharacteristicsGroup">
+    <!--名称-->
+    <xs:attribute name="Name" type="xs:string" use="required">
+    </xs:attribute>
+    <!--类型-->
+    <xs:attribute name="Type" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <!--时间属性-->
+          <xs:enumeration value="TemporalAttribute"/>
+          <!--空间属性-->
+          <xs:enumeration value="SpatialAttribute"/>
+          <!--社会属性-->
+          <xs:enumeration value="SocialAttribute"/>
+          <!--人文属性-->
+          <xs:enumeration value="HumanisticAttribute"/>
+          <!--物理属性-->
+          <xs:enumeration value="PhysicalAttribute"/>
+          <!--化学属性-->
+          <xs:enumeration value="ChemicalAttribute"/>
+          <!--生物属性-->
+          <xs:enumeration value="BiologicalAttribute"/>
+          <!--其他属性-->
+          <xs:enumeration value="OtherAttribute"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:attributeGroup>
+  <xs:complexType name="AttributeCharacteristicsType">
+    <xs:sequence>
+      <!--属性-->
+      <xs:choice>
+        <xs:element name="AttributeCharacteristicsItem"  minOccurs="0" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base ="xs:string">
+                <xs:attributeGroup ref="geompeg7:AttributeCharacteristicsGroup"/>
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="AttributeCharacteristicsFileItem">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="File" type="anyURI" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attributeGroup ref="geompeg7:AttributeCharacteristicsGroup"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <!--要素关系类型-->
+  <xs:complexType name="ElementalRelationshipsType">
+    <xs:sequence>
+      <!--要素关系项-->
+      <xs:element name="ElementalRelationshipsItem" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <!--相关要素-->
+            <xs:element name="RelateElement" minOccurs="0" maxOccurs="unbounded">
+              <xs:simpleType>
+                <xs:list itemType="xs:string"/>
+              </xs:simpleType>
+            </xs:element>
+            <!--关系描述-->
+            <xs:element name="RelationshipDescription"></xs:element>
+          </xs:sequence>
+          <!--名称-->
+          <xs:attribute name="Name" type="xs:string" use="required"/>
+          <!--类型-->
+          <xs:attribute name="Type" use="required">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <!--时间关系-->
+                <xs:enumeration value="TemporalRelationship"/>
+                <!--空间关系-->
+                <xs:enumeration value="SpatialRelationship"/>
+                <!--其他关系-->
+                <xs:enumeration value="OtherRelationships"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <!--演化过程类型-->
+  <xs:complexType name="EvolutionaryProcessType">
+    <xs:sequence>
+      <!--演化过程项-->
+      <xs:element name="EvolutionaryProcessItem" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:choice>
+              <!--地理语义-->
+              <xs:element name="GeographicalSemantics" type="geompeg7:GeographicalSemanticsType"/>
+              <!--空间定位-->
+              <xs:element name="SpatialLocation" type="geompeg7:SpatialLocationType"/>
+              <!--几何形态-->
+              <xs:element name="GeometricalForms" type="geompeg7:GeometricalFormsType"/>
+              <!--属性特征-->
+              <xs:element name="AttributeCharacteristics" type="geompeg7:AttributeCharacteristicsType"/>
+              <!--要素关系-->
+              <xs:element name="ElementalRelationships" type="geompeg7:ElementalRelationshipsType"/>
+              <!--作用机制-->
+              <xs:element name="ActionMechanism" type="geompeg7:ActionMechanismType"/>
+            </xs:choice>
+            <xs:choice>
+              <!--时刻-->
+              <xs:element name="TimeInstant" type="geompeg7:TimeCoordinateType"/>
+              <!--时段-->
+              <xs:element name="TimeSegment" type="geompeg7:SegmentTimeCoordinateType"/>
+              <!--时序-->
+              <xs:element name="TimeSequence" type="geompeg7:ListTimeCoordinateType"/>
+            </xs:choice>
+          </xs:sequence>
+          <!--名称-->
+          <xs:attribute name="Name" type="xs:string" use="required"/>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <!--作用机制类型-->
+  <xs:complexType name="ActionMechanismType">
+    <xs:sequence>
+      <!--作用机制项-->
+      <xs:element name="ActionMechanismItem" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <!--名称-->
+              <xs:attribute name="Name" use="required"/>
+              <!--类型-->
+              <xs:attribute name="Type" use="required">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <!--物理-->
+                    <xs:enumeration value="Physics"/>
+                    <!--化学-->
+                    <xs:enumeration value="Chemistry"/>
+                    <!--生物-->
+                    <xs:enumeration value="Biology"/>
+                    <!--文化-->
+                    <xs:enumeration value="Culture"/>
+                    <!--社会-->
+                    <xs:enumeration value="Society"/>
+                    <!--经济-->
+                    <xs:enumeration value="Economy"/>
+                    <!--其他-->
+                    <xs:enumeration value="Other"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:attribute>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <!--描述维度类型-->
+  <xs:complexType name="DescriptionOfDimensionalType">
+    <xs:sequence>
+      <!--地理语义-->
+      <xs:element name="GeographicalSemantics" type="geompeg7:GeographicalSemanticsType"/>
+      <!--空间定位-->
+      <xs:element name="SpatialLocation" type="geompeg7:SpatialLocationType"/>
+      <!--几何形态-->
+      <xs:element name="GeometricalForms"  type="geompeg7:GeometricalFormsType"/>
+      <!--属性特征-->
+      <xs:element name="AttributeCharacteristics" type="geompeg7:AttributeCharacteristicsType"/>
+      <!--要素关系-->
+      <xs:element name="ElementalRelationships" type="geompeg7:ElementalRelationshipsType"/>
+      <!--演化过程-->
+      <xs:element name="EvolutionaryProcess" type="geompeg7:EvolutionaryProcessType"/>
+      <!--作用机制-->
+      <xs:element name="ActionMechanism" type="geompeg7:ActionMechanismType"/>
+    </xs:sequence>
+    <!--名称-->
+    <xs:attribute name="Name" type="xs:string" use="required"/>
+  </xs:complexType>
+</xs:schema>

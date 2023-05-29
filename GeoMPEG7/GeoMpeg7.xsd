@@ -1,0 +1,24 @@
+﻿<?xml version="1.0"?>
+<xs:schema targetNamespace="http://www.geompeg7.com"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:mpeg7="urn:mpeg:mpeg7:schema:2001"
+           xmlns:geompeg7="http://www.geompeg7.com"
+           xmlns="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+  <!--引入MPEG7类型-->
+  <xs:include schemaLocation="./Common.xsd"/>
+  <xs:include schemaLocation="./LowLevelLayerItem.xsd"/>
+  <xs:include schemaLocation="./MidLevelLayerItem.xsd"/>
+  <xs:include schemaLocation="./HighLevelLayerItem.xsd"/>
+  <!--特征层类型-->
+  <xs:complexType name="FeaturesLayersType">
+      <xs:sequence>
+        <!--低层特征层-->
+        <xs:element name="LowLevelFeaturesLayer" type="geompeg7:LowLevelFeaturesLayerType"/>
+        <!--中层特征层-->
+        <xs:element name="MidLevelFeaturesLayer" type="geompeg7:MidLevelFeaturesLayerType"/>
+        <!--高层特征层-->
+        <xs:element name="HighLevelFeaturesLayer" type="geompeg7:HighLevelFeaturesLayerType"/>
+      </xs:sequence>
+  </xs:complexType>
+</xs:schema>

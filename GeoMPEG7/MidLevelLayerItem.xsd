@@ -1,0 +1,77 @@
+﻿<?xml version="1.0"?>
+<xs:schema targetNamespace="http://www.geompeg7.com"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:geompeg7="http://www.geompeg7.com"
+           xmlns="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+  <xs:include schemaLocation="./Common.xsd"/> 
+  <!--中层特征层类型-->
+  <xs:complexType name="MidLevelFeaturesLayerType">
+    <xs:complexContent>
+      <xs:extension base="geompeg7:FeaturesLayerBaseType">
+        <xs:sequence>
+          <!--时间-->
+          <xs:element name="Time">
+            <xs:complexType>
+              <xs:sequence>
+                <!--时间要素-->
+                <xs:element name="TimeElement" type="geompeg7:DescriptionOfDimensionalType" 
+                            minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <!--地点-->
+          <xs:element name="Location">
+            <xs:complexType>
+              <xs:sequence>
+                <!--地点要素-->
+                <xs:element name="LocationElement" type="geompeg7:DescriptionOfDimensionalType"  
+                            minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <!--人物-->
+          <xs:element name="Character">
+            <xs:complexType>
+              <xs:sequence>
+                <!--人物要素-->
+                <xs:element name="CharacterElement" type="geompeg7:DescriptionOfDimensionalType"  
+                            minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <!--事物-->
+          <xs:element name="Thing">
+            <xs:complexType>
+              <xs:sequence>
+                <!--事物要素-->
+                <xs:element name="ThingElement" type="geompeg7:DescriptionOfDimensionalType"  
+                            minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <!--事件-->
+          <xs:element name="Event">
+            <xs:complexType>
+              <xs:sequence>
+                <!--事件要素-->
+                <xs:element name="EventElement" type="geompeg7:DescriptionOfDimensionalType"  
+                            minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <!--现象-->
+          <xs:element name="Phenomenon">
+            <xs:complexType>
+              <xs:sequence>
+                <!--现象要素-->
+                <xs:element name="PhenomenonElement" type="geompeg7:DescriptionOfDimensionalType" 
+                            minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

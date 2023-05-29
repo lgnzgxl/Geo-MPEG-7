@@ -1,0 +1,240 @@
+<?xml version="1.0"?>
+<xs:schema targetNamespace="http://www.geompeg7.com"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:mpeg7="urn:mpeg:mpeg7:schema:2001"
+           xmlns:geompeg7="http://www.geompeg7.com"
+           xmlns="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+	<xs:include schemaLocation="./Common.xsd"/>
+  <xs:import namespace="urn:mpeg:mpeg7:schema:2001" schemaLocation="../MPEG7/audio-2001.xsd"/>
+  <xs:complexType name="AudioLLDScalarExtentType">
+    <xs:complexContent>
+      <xs:extension base="mpeg7:AudioLLDScalarType">
+        <xs:attribute name="Tool" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <!--频域特征基类-->
+  <xs:complexType name="AudioLLDVectorExtentType">
+    <xs:complexContent>
+      <xs:extension base="mpeg7:AudioLLDVectorType">
+        <xs:attribute name="Tool" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <!--过零率-->
+  <xs:complexType name="ZeroCrossingRateType">
+    <xs:complexContent>
+      <xs:extension base="geompeg7:AudioLLDScalarExtentType"/>
+    </xs:complexContent>
+  </xs:complexType>
+  <!--能量-->
+  <xs:complexType name="EnergyType">
+    <xs:complexContent>
+      <xs:extension base="geompeg7:AudioLLDScalarExtentType"/>
+    </xs:complexContent>
+  </xs:complexType>
+  <!--频谱质心-->
+  <xs:complexType name="SpectralCentroidType">
+    <xs:complexContent>
+      <xs:extension base="geompeg7:AudioLLDScalarExtentType"/>
+    </xs:complexContent>
+  </xs:complexType>
+  <!--MFCC-->
+  <xs:complexType name="MfccType">
+    <xs:complexContent>
+      <xs:extension base="geompeg7:AudioLLDVectorExtentType"/>
+    </xs:complexContent>
+  </xs:complexType>
+  <!--麦克风特征类型-->
+  <xs:complexType name="MicrophoneFeaturesType">
+    <xs:sequence>
+      <!--内参-->
+      <xs:element name="InternalReference">
+        <xs:complexType>
+          <xs:sequence>
+            <!--指向性-->
+            <xs:element name="Directionality">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="IsOmnidirectional" type="xs:boolean"/>
+                  <xs:element name="FormulaReference" type="xs:anyURI"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <!--声音量测范围-->
+            <xs:element name="AcousticIntensityMeasurementRange">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="MinAcousticIntensity">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:float">
+                        <xs:minInclusive value="0"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="MaxAcousticIntensity" type="xs:float"/>
+                </xs:sequence>
+                <xs:attribute name="Unit" type="xs:string" fixed="dB" use="required"/>
+              </xs:complexType>
+            </xs:element>
+            <!--频率范围-->
+            <xs:element name="FrequencyRange" >
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="MinFrequency">
+                    <xs:simpleType>
+                      <xs:restriction base="xs:int">
+                        <xs:minInclusive value="0"/>
+                      </xs:restriction>
+                    </xs:simpleType>
+                  </xs:element>
+                  <xs:element name="MaxFrequency" type="xs:int"/>
+                </xs:sequence>
+                <xs:attribute name="Unit" type="xs:string" fixed="Hz" use="required"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <!--外参-->
+      <xs:element name="ExternalReference">
+        <xs:complexType>
+          <xs:sequence>
+            <!--姿态-->
+            <xs:element name="Gestures" type="geompeg7:EulerAngleType"/>
+            <!--位置-->
+            <xs:element name="Location">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="Description" type="xs:string"/>
+                  <xs:element name="Coordinate"  type="geompeg7:SpatialCoordinateType"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <!--接收距离范围-->
+      <xs:element name="ReceivingRange">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:float">
+              <xs:attribute name="Unit" fixed="m" use="required"></xs:attribute>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+      <!--接收设备和型号-->
+      <xs:element name="CollectionDeviceTypeAndModel">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Device" type="xs:string"/>
+            <xs:element name="ModelNumber" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <!--音频参数类型-->
+  <xs:complexType name="AudioParametersType">
+  <xs:sequence>
+    <!--音频创建时间-->
+    <xs:element name="AudioCreationTime" type="xs:dateTime"/>
+    <!--格式-->
+    <xs:element name="Format" type="xs:string"/>
+  </xs:sequence>
+  </xs:complexType>
+  <!--音频特征类型-->
+  <xs:complexType name="AudioFeaturesType">
+    <xs:sequence>
+      <!--时域特征-->
+      <xs:element name="TimeDomainFeatures">
+        <xs:complexType>
+          <xs:sequence >
+            <element name="AudioDescriptor" type="mpeg7:AudioDType"  minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <!--频域特征-->
+      <xs:element name="SpectralDomainFeatures">
+        <xs:complexType>
+          <xs:sequence >
+            <element name="AudioDescriptor" type="mpeg7:AudioDType"  minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <!--感知特征-->
+      <xs:element name="PerceptualFeatures">
+        <xs:complexType>
+          <xs:sequence >
+            <element name="AudioDescriptor" type="mpeg7:AudioDType"  minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <!--环境参数类型-->
+  <xs:complexType name="EnvironmentalParametersType">
+    <xs:sequence>
+      <!--固体环境-->
+      <xs:element name="Solid" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="SolidObject" type="geompeg7:ObjectType" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <!--液体环境-->
+      <xs:element name="Liquid" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="LiquidObject" type="geompeg7:ObjectType" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <!--气体环境-->
+      <xs:element name="Gas" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <!--天气情况-->
+            <xs:element name="WeatherCondition" type="xs:string"/>
+            <!--风向-->
+            <xs:element name="WindDirection" type="xs:string"/>
+            <!--气体对象-->
+            <xs:element name="GasObject" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence>
+                  <!--气体范围-->
+                  <xs:element name="Extent" type="geompeg7:ExtentType" maxOccurs="unbounded"/>
+                  <!--气体湿度-->
+                  <xs:element name="Humidity" type="geompeg7:HumidityType"/>
+                  <!--气体温度-->
+                  <xs:element name="Temperature" type="geompeg7:TemperatureType"/>
+                </xs:sequence>
+                <xs:attribute name="Name" type="xs:string" use="required"/>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <!--低层特征层类型-->
+  <xs:complexType name="LowLevelFeaturesLayerType">
+    <xs:complexContent>
+      <xs:extension base="geompeg7:FeaturesLayerBaseType">
+        <xs:sequence>
+          <!--麦克风特征-->
+          <xs:element name="MicrophoneFeatures" type="geompeg7:MicrophoneFeaturesType"/>
+          <!--音频参数-->
+          <xs:element name="AudioParameters" type="geompeg7:AudioParametersType"/>
+          <!--音频特征-->
+          <xs:element name="AudioFeatures" type="geompeg7:AudioFeaturesType"/>
+          <!--环境参数-->
+          <xs:element name="EnvironmentalParameters" type="geompeg7:EnvironmentalParametersType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

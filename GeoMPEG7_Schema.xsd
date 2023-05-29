@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<xs:schema targetNamespace="urn:mpeg:mpeg7:schema:2001"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:mpeg7="urn:mpeg:mpeg7:schema:2001"
+           xmlns:geompeg7="http://www.geompeg7.com"
+           xmlns="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+  <!--引入MPEG7类型-->
+  <xs:import namespace="http://www.geompeg7.com" schemaLocation="./GeoMPEG7/GeoMpeg7.xsd"/>
+  <xs:include schemaLocation="./MPEG7/Mpeg7-2001.xsd"/>
+
+  <!--GeoMPEG7的定义-->
+  <xs:complexType name="GeoMpeg7Type">
+    <complexContent>
+      <extension base="mpeg7:ContentEntityType">
+        <xs:sequence>
+          <xs:element name="GeoMpeg7Extent" type="geompeg7:FeaturesLayersType"/>
+        </xs:sequence>
+      </extension>
+    </complexContent>
+  </xs:complexType>
+
+  <xs:element name="GeoMpeg7Extent" type="geompeg7:FeaturesLayersType"></xs:element>
+  
+  <!--GeoMpeg7要素的定义-->
+  <element name="GeoMpeg7">
+    <complexType>
+      <complexContent>
+        <extension base="mpeg7:Mpeg7Type">
+          <choice>
+            <element name="DescriptionUnit" type="mpeg7:Mpeg7BaseType"/>
+            <element name="Description" type="mpeg7:GeoMpeg7Type" maxOccurs="unbounded"/>
+          </choice>
+        </extension>
+      </complexContent>
+    </complexType>
+  </element>
+</xs:schema>

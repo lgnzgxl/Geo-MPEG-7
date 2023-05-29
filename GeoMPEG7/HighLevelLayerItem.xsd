@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<xs:schema targetNamespace="http://www.geompeg7.com"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:geompeg7="http://www.geompeg7.com"
+           xmlns="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+  <xs:include schemaLocation="./Common.xsd"/>  
+  <!--高层特征层类型-->
+  <xs:complexType name="HighLevelFeaturesLayerType">
+    <xs:complexContent>
+      <xs:extension base="geompeg7:FeaturesLayerBaseType">
+        <xs:sequence>
+          <!--场景-->
+          <xs:element name="Scene">
+            <xs:complexType>
+              <xs:sequence>
+                <!--场景要素-->
+                <xs:element name="SceneElement" type="geompeg7:DescriptionOfDimensionalType" 
+                            minOccurs="0" maxOccurs="unbounded"/>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>
